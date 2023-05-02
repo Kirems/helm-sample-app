@@ -9,7 +9,7 @@ steps:
     title: Cloning main repository...
     stage: prepare
     type: git-clone
-    repo: Kirems/helm-sample-app
+    repo: "Kirems/helm-sample-app"
     revision: "${{CF_BRANCH}}"
     git: github
   build:
