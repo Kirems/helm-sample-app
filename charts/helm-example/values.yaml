@@ -6,7 +6,8 @@ replicaCount: 1
 
 image:
   pullPolicy: IfNotPresent
-  repository: anaisurlichs/helm-go-example
+  repository: 168658707614.dkr.ecr.eu-west-2.amazonaws.com/kiro
+  tag: helm-go-example2.0.0	
 
 imagePullSecrets: []
 nameOverride: ""
