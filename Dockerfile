@@ -1,4 +1,4 @@
-FROM golang:1.7.1 AS build-env
+FROM golang:1.19.9 AS build-env
 COPY src /go/src
 RUN CGO_ENABLED=0 GOOS=linux go build -o bin/sample src/sample/trivial-web-server.go
 
