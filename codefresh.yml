@@ -1,4 +1,5 @@
 version: '1.0'
+mode: parallel
 stages:
   - "prepare"
   - "build"
@@ -12,17 +13,18 @@ steps:
     repo: "Kirems/helm-sample-app"
     revision: "${{CF_BRANCH}}"
     git: "github-2"
-  build:
-    title: "Building Docker Image"
+  buildFisrtImage:
+    title: "Building Docker Image 1 "
     stage: "build"
     type: "build"
     working_directory: ./helm-sample-app
     image_name: "kiro"
     tag: "helm-go-example2.0.0"
     dockerfile: "Dockerfile"
-  build:
+  buildSecondImage:
     title: "building second docker"
     stage: "build"
+    type: "build"
     image_name: "kiro2"
     tag: "helm-go-example4.0.0"
     dockerfile: "Dockerfile2"  
