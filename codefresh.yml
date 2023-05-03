@@ -29,7 +29,7 @@ steps:
       action: "push"
       helm_version: 3.0.2
       chart_name: "charts/helm-example"
-      kube_context: "${{KUBE_CLUSTER_NAME}}"
+      helm_repository_context: "${{HELM_REPO}}"
   deploy:
     type: "helm"
     stage: "deploy"
