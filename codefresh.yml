@@ -25,6 +25,7 @@ steps:
     title: "building second docker"
     stage: "build"
     type: "build"
+    working_directory: ./helm-sample-app
     image_name: "kiro2"
     tag: "helm-go-example4.0.0"
     dockerfile: "Dockerfile2"  
