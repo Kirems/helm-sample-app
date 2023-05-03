@@ -20,6 +20,12 @@ steps:
     image_name: "kiro"
     tag: "helm-go-example2.0.0"
     dockerfile: "Dockerfile"
+  build:
+    title: "building second docker"
+    stage: "build"
+    image_name: "kiro2"
+    tag: "helm-go-example4.0.0"
+    dockerfile: "Dockerfile2"  
   store:
     title: "Storing Helm Chart"
     type: "helm"
