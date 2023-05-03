@@ -17,7 +17,7 @@ steps:
     stage: "build"
     type: "build"
     working_directory: ./helm-sample-app
-    image_name: kiro/helm-go-example
+    image_name: "kiro:helm-go-example"
     tag: 2.0.0
     dockerfile: "Dockerfile"
   store:
