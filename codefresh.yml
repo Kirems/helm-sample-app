@@ -14,7 +14,7 @@ steps:
     revision: "${{CF_BRANCH}}"
     git: "github-2"
   buildFisrtImage:
-    title: "Building Docker Image 1 "
+    title: "Building Docker Image 1"
     stage: "build"
     type: "build"
     working_directory: ./helm-sample-app
@@ -22,7 +22,7 @@ steps:
     tag: "helm-go-example2.0.0"
     dockerfile: "Dockerfile"
   buildSecondImage:
-    title: "building second docker"
+    title: "Building Docker Image2"
     stage: "build"
     type: "build"
     working_directory: ./helm-sample-app
