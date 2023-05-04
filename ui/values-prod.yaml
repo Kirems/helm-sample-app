@@ -1,0 +1,34 @@
+app:
+  replicas: 2
+  env: prod
+  namespace: prod
+  container:
+    image: 
+      repository: "168658707614.dkr.ecr.eu-west-2.amazonaws.com/kiro"
+      tag: "helm-go-example2.0.0"
+  computerc:
+    limits:
+      cpu: 1
+      memory: 1Gi
+    requests:
+      cpu: 1
+      memory: 1Gi
+
+hpa:
+  enabled: true
+  maxreplicas: 3
+  minrplicas: 1
+  cuputi: 50
+
+config:
+  name: config.yaml
+  data: 
+    timeout: 2s
+    logfile: /app/var/log.txt
+    database:
+      ip: 120.21.31.10
+      name: ui-prod 
+
+
+configxml:
+  name: app.xml
