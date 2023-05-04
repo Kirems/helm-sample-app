@@ -1,23 +1,24 @@
 #!/usr/bin/env node
 const get = () => {
+    try {
+      return require('/codefresh/volume/event.json');
+    } catch (e) {
+      return undefined;
+    }
+  };
+  
+  const FALSE = 'false';
+  
   try {
-    return require('/codefresh/volume/event.json');
+    const event = get();
+    const { NAMESPACE = 'default' } = process.env;
+    const ALLOWED_LABELS = ['env:prod', 'env:alpha', 'env:beta', 'env:gamma', 'env:omega'];
+    const label = event?.label?.name;
+    if (label && !ALLOWED_LABELS.includes(label)) return console.log(FALSE);
+    if (!label) return console.log(NAMESPACE);
+    if (label === 'env:prod') console.log('prod');
+    else console.log(NAMESPACE);
   } catch (e) {
-    return undefined;
+    console.log(FALSE);
   }
-};
-
-const FALSE = 'false';
-
-try {
-  const event = get();
-  const { NAMESPACE = 'default' } = process.env;
-  const ALLOWED_LABELS = ['env:staging', 'env:prod', 'env:beta', 'env:gamma', 'env:omega'];
-  const label = event?.label?.name;
-  if (label && !ALLOWED_LABELS.includes(label)) return console.log(FALSE);
-  if (!label) return console.log(NAMESPACE);
-  if (label === 'env:prod') console.log('prod');
-  else console.log(label.split(':')[1]);
-} catch (e) {
-  console.log(FALSE);
-}
+  
