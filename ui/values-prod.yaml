@@ -1,7 +1,7 @@
 app:
   replicas: 1
   env: prod
-  #namespace: prod
+  namespace: prod
   container:
     image:
       repository: "168658707614.dkr.ecr.eu-west-2.amazonaws.com/kiro"

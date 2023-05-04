@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  #namespace: {{ .Values.app.namespace }}
+  namespace: {{ .Values.app.namespace }}
   name: react-ui-dep
   labels:
     {{- include "ui.labels" . | nindent 4 }}
