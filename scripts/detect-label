@@ -16,7 +16,7 @@ try {
   const label = event?.label?.name;
   if (label && !ALLOWED_LABELS.includes(label)) return console.log(FALSE);
   if (!label) return console.log(NAMESPACE);
-  if (label === 'env:staging') console.log('application');
+  if (label === 'env:prod') console.log('prod');
   else console.log(label.split(':')[1]);
 } catch (e) {
   console.log(FALSE);
