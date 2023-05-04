@@ -1,9 +1,23 @@
-FROM golang:1.19.9 AS build-env
-COPY src /go/src
-RUN CGO_ENABLED=0 GOOS=linux go build -o bin/sample src/sample/trivial-web-server.go
+# Use an official Node.js runtime as a parent image
+FROM node:16-alpine
 
-FROM scratch
-COPY --from=build-env /go/bin/sample /app/sample
+# Set the working directory to /app
+WORKDIR /app
 
-EXPOSE 8080
-CMD ["/app/sample"]
+# Copy the package.json and package-lock.json files to the container
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy the rest of the application code to the container
+COPY . .
+
+# Build the app
+RUN npm run build
+
+# Expose port 3000
+EXPOSE 3000
+
+# Run the app
+CMD ["npm", "start"]
