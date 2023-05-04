@@ -25,7 +25,7 @@ steps:
     title: "Storing Helm Chart"
     type: "helm"
     stage: "store"
-    working_directory: ./helm-sample-app
+    working_directory: ./helm-sample-app/ui
     arguments:
       action: "push"
       helm_version: 3.0.2
