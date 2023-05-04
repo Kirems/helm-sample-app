@@ -21,14 +21,6 @@ steps:
     image_name: "kiro"
     tag: "helm-go-example2.0.0"
     dockerfile: "Dockerfile"
-  buildSecondImage:
-    title: "Building Docker Image2"
-    stage: "build"
-    type: "build"
-    working_directory: ./helm-sample-app
-    image_name: "kiro2"
-    tag: "helm-go-example4.0.0"
-    dockerfile: "Dockerfile2"  
   store:
     title: "Storing Helm Chart"
     type: "helm"
@@ -37,7 +29,7 @@ steps:
     arguments:
       action: "push"
       helm_version: 3.0.2
-      chart_name: "charts/helm-example"
+      chart_name: "charts/helm-react"
       helm_repository_context: "${{HELM_REPO}}"
   deploy:
     type: "helm"
@@ -46,7 +38,7 @@ steps:
     arguments:
       action: "install"
       chart_name: "charts/helm-example"
-      release_name: "my-go-chart-prod"
+      release_name: "react-app-1"
       helm_version: 3.0.2
       kube_context: "${{KUBE_CLUSTER_NAME}}"
       custom_values:
