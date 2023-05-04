@@ -1,0 +1,23 @@
+#!/usr/bin/env node
+const get = () => {
+  try {
+    return require('/codefresh/volume/event.json');
+  } catch (e) {
+    return undefined;
+  }
+};
+
+const FALSE = 'false';
+
+try {
+  const event = get();
+  const { NAMESPACE = 'default' } = process.env;
+  const ALLOWED_LABELS = ['env:staging', 'env:prod', 'env:beta', 'env:gamma', 'env:omega'];
+  const label = event?.label?.name;
+  if (label && !ALLOWED_LABELS.includes(label)) return console.log(FALSE);
+  if (!label) return console.log(NAMESPACE);
+  if (label === 'env:staging') console.log('application');
+  else console.log(label.split(':')[1]);
+} catch (e) {
+  console.log(FALSE);
+}
