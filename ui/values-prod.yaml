@@ -5,7 +5,7 @@ app:
   container:
     image:
       repository: "168658707614.dkr.ecr.eu-west-2.amazonaws.com/kiro"
-      tag: "helm-go-example2.0.0"
+      tag: "{{{BUILD_NUM}}}"
   computerc:
     limits:
       cpu: 1
