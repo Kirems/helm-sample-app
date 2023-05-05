@@ -1,48 +1,137 @@
 version: '1.0'
 mode: parallel
 stages:
+  - "clone"
   - "prepare"
   - "build"
-  - "store"
+  - "helm"
   - "deploy"
 steps:
   clone:
     title: "Cloning repo"
-    stage: "prepare"
+    stage: "clone"
     type: git-clone
     repo: "Kirems/helm-sample-app"
     revision: "${{CF_BRANCH}}"
     git: "github-2"
+  detectNamespace:
+      title: "Detect Deployment Namespace"
+      type: "freestyle"
+      image: "node:18-alpine"
+      working_directory: "${{clone}}/scripts"
+      stage: "clone"
+      when:
+        steps:
+        - name: clone
+          on:
+            - success  
+      commands:
+            - export DEPLOY_NAMESPACE=$(node ./detect-label)
+            - cf_export DEPLOY_NAMESPACE=$DEPLOY_NAMESPACE   
+  appVersion:
+      title: Set App Version Variables
+      stage: "prepare"
+      image: alpine:latest
+      working_directory: "${{clone}}"
+      when:
+        steps:
+        - name: detectNamespace
+          on:
+            - success
+        condition:
+          all:
+            isTagged: '"${{DEPLOY_NAMESPACE}}" != "false"'
+      commands:
+        - apk update
+        - apk add jq
+        - export APP_VERSION=$(jq -r .version lerna.json)
+        - export EXEC_TIME=$(date +%s)
+        - export ROLL_NUM=$(printf $EXEC_TIME | tail -c 4)
+        - cf_export APP_VERSION=$APP_VERSION
+        - cf_export BUILD_NUM="$APP_VERSION-rc.$ROLL_NUM.$CF_SHORT_REVISION"
+        - cf_export CHART_VERSION="$APP_VERSION-rc.$ROLL_NUM"          
   buildFisrtImage:
     title: "Building Docker Image 1"
     stage: "build"
     type: "build"
-    working_directory: ./helm-sample-app
+    working_directory: "${{clone}}"
     image_name: "kiro"
-    tag: "helm-go-example2.0.0"
+    tag: "${{BUILD_NUM}}"
     dockerfile: "Dockerfile"
+    build_arguments:
+      - BASE_TAG=${{RHINO_REGISTRY}}/base:${{BUILD_NUM}}
+    when:
+     steps:
+     - name: appVersion
+       on:
+        - success
+  updateHelmVersion:
+    title: Update Helm Version
+    stage: helm
+    type: "freestyle"
+    image: alpine:latest
+    working_directory: "${{clone}}"
+    when:
+      steps:
+      - name: buildFisrtImage
+        on:
+          - success        
+    commands:
+    - apk update
+    - apk add sed
+    - 'sed -i "s/version: VERSION/version: $BUILD_NUM/g" ui/Chart.yaml'
+    - 'sed -i "s/appVersion: APP_VERSION/appVersion: $BUILD_NUM/g" ui/Chart.yaml'
+    - cat ui/Chart.yaml  
+  prepareHelmValues:
+    title: Generate Helm Values
+    stage: helm
+    type: "freestyle"
+    image: node:16.15.1-alpine
+    working_directory: "${{clone}}"
+    when:
+      steps:
+      - name: updateHelmVersion
+        on:
+          - success
+    commands:
+      - npm install --ignore-scripts
+      - node ./scripts/generateAppChartValues.js
+      - cat ./ui/values.yaml
   store:
     title: "Storing Helm Chart"
     type: "helm"
-    stage: "store"
-    working_directory: ./helm-sample-app/ui
+    stage: "helm"
+    working_directory: "${{clone}}"
+    when:
+      steps:
+      - name: prepareHelmValues
+        on:
+          - success
     arguments:
       action: "push"
       helm_version: 3.0.2
-      chart_name: "charts/helm-react"
+      chart_name: ui
       helm_repository_context: "${{HELM_REPO}}"
-  deploy:
-    type: "helm"
-    stage: "deploy"
-    working_directory: ./helm-sample-app
-    arguments:
-      action: "install"
-      chart_name: "charts/helm-example"
-      release_name: "react-app-1"
-      helm_version: 3.0.2
-      kube_context: "${{KUBE_CLUSTER_NAME}}"
-      custom_values:
-        - 'buildID=${{CF_BUILD_ID}}'
-        - 'image_pullPolicy=Always'
-        - 'image_tag=2.0.0'
-        - 'replicaCount=3'
+      
+  deployProduction:
+      type: helm
+      stage: deploy
+      working_directory: "${{clone}}"
+      title: Deploy to PROD
+      when:
+        steps:
+        - name: store
+          on:
+            - success
+        
+      arguments:
+        namespace: prod
+        action: install
+        chart_name: ui
+        release_name: application
+        helm_version: 3.0.2
+        kube_context: ${{KUBE_CLUSTER_NAME}}
+        
+        
+       
+        
