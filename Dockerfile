@@ -1,23 +1,11 @@
-# Use an official Node.js runtime as a parent image
-FROM node:16-alpine
 
-# Set the working directory to /app
+FROM node AS build
 WORKDIR /app
-
-# Copy the package.json and package-lock.json files to the container
 COPY package*.json ./
-
-# Install dependencies
 RUN npm install
-
-# Copy the rest of the application code to the container
 COPY . .
-
-# Build the app
 RUN npm run build
 
-# Expose port 3000
-EXPOSE 3000
-
-# Run the app
-CMD ["npm", "start"]
+FROM nginx:1.18
+COPY --from=build /app/build/ /usr/share/nginx/html
+RUN chown -R nginx:nginx /usr/share/nginx/html
