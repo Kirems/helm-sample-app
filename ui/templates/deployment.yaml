@@ -19,7 +19,7 @@ spec:
         - name: react-ui
           image: "{{ .Values.app.container.image.repository }}:{{ .Values.app.container.image.tag }}"
           ports:
-            - containerPort: 3000
+            - containerPort: 80
           volumeMounts:
             - name: config-volume
               mountPath: /usr/share/nginx/html/env.js
