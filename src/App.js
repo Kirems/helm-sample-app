@@ -16,6 +16,7 @@ function App() {
           rel="noopener noreferrer"
         >
          Learn {process.env.REACT_APP_KUKU}
+         DONt learn {process.env.REACT_APP_NAME}
         </a>
       </header>
     </div>
