@@ -6,8 +6,5 @@ metadata:
   labels:
     {{- include "ui.labels" . | nindent 4 }}
 data:
-  production-env.js: |
-    window.__ENV__ = {
-      USER: "tetris"
-    }
-  
+  production.env: |
+   REACT_APP_NAME=test

@@ -7,7 +7,7 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
-          Hello <code>{window.__ENV__?.USER ?? "???"}</code>
+          Hello {process.env.REACT_APP_NAME}
         </p>
         <a
           className="App-link"

@@ -1,3 +1,3 @@
 window.__ENV__ = {
-    USER: "tetris"
+    USER: "asdasdasd"
 };
