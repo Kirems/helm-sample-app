@@ -6,5 +6,5 @@ metadata:
   labels:
     {{- include "ui.labels" . | nindent 4 }}
 data:
-  production.env: |
-   REACT_APP_NAME=BRMBRM
+  .env: REACT_APP_NAME=DEFAULT
+  
