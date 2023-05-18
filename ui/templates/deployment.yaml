@@ -23,6 +23,7 @@ spec:
           volumeMounts:
             - name: config-volume
               mountPath: /app/.env
+              subPath: .env
           imagePullPolicy: IfNotPresent
           resources:
             {{- toYaml .Values.app.computerc | nindent 12 }}
