@@ -24,3 +24,5 @@ yarn-error.log*
 /ui/templates/configmap-prod.yaml
 saved-deployment.yaml
 configbackup.yaml
+.env
+/ui/templates/configmap.yaml

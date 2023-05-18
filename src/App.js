@@ -15,7 +15,7 @@ function App() {
           target="_blank"
           rel="noopener noreferrer"
         >
-         Learn REact
+         Learn {process.env.REACT_APP_KUKU}
         </a>
       </header>
     </div>
